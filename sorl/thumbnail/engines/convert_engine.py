@@ -53,7 +53,10 @@ class Engine(EngineBase):
             args.append(fp.name)
             args = list(map(smart_str, args))
             p = subprocess.Popen(args, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
-            returncode = p.wait()
+            try:
+                returncode = p.wait(settings.THUMBNAIL_CONVERT_TIMEOUT)
+            except subprocess.TimeoutExpired:
+                p.kill()
             out, err = p.communicate()
 
             if returncode:
@@ -89,7 +92,10 @@ class Engine(EngineBase):
             args = settings.THUMBNAIL_IDENTIFY.split(' ')
             args.append(image['source'] + '[0]')
             p = subprocess.Popen(args, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
-            p.wait()
+            try:
+                p.wait(settings.THUMBNAIL_IDENTIFY_TIMEOUT)
+            except subprocess.TimeoutExpired:
+                p.kill()
             m = size_re.match(str(p.stdout.read()))
             image['size'] = int(m.group('x')), int(m.group('y'))
         return image['size']
@@ -105,14 +111,22 @@ class Engine(EngineBase):
             args = settings.THUMBNAIL_IDENTIFY.split(' ')
             args.append(fp.name + '[0]')
             p = subprocess.Popen(args, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
-            retcode = p.wait()
+            try:
+                retcode = p.wait(settings.THUMBNAIL_IDENTIFY_TIMEOUT)
+            except subprocess.TimeoutExpired:
+                p.kill()
         return retcode == 0
 
     def _get_exif_orientation(self, image):
         args = settings.THUMBNAIL_IDENTIFY.split()
         args.extend(['-format', '%[exif:orientation]', image['source']])
         p = subprocess.Popen(args, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
-        p.wait()
+        try:
+            print("THUMBNAIL_IDENTIFY WAIT", flush=True)
+            p.wait(settings.THUMBNAIL_IDENTIFY_TIMEOUT)
+        except subprocess.TimeoutExpired:
+            print("THUMBNAIL_IDENTIFY TIMEOUT EXPIRED", flush=True)
+            p.kill()
         result = p.stdout.read().strip()
         try:
             return int(result)
