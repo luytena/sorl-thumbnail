@@ -151,6 +151,26 @@ Path to identify command, use ``'gm identify'`` for GraphicsMagick.
 Only applicable for the convert Engine.
 
 
+``THUMBNAIL_CONVERT_TIMEOUT``
+=====================
+
+- Default ``None``
+
+Optional wait timeout (seconds) for subprocess running convert command.
+The subprocess is terminated after exceeding the specified timeout.
+Only applicable for the convert Engine.
+
+
+``THUMBNAIL_IDENTIFY_TIMEOUT``
+======================
+
+- Default ``None``
+
+Optional wait timeout (seconds) for subprocess running identify command.
+The subprocess is terminated after exceeding the specified timeout.
+Only applicable for the convert Engine.
+
+
 ``THUMBNAIL_STORAGE``
 =====================
 

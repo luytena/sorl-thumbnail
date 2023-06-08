@@ -27,6 +27,11 @@ THUMBNAIL_ENGINE = 'sorl.thumbnail.engines.pil_engine.Engine'
 THUMBNAIL_CONVERT = 'convert'
 THUMBNAIL_IDENTIFY = 'identify'
 
+# Optional wait timeouts for subprocesses running Imagemagick or
+# Graphicsmagick ``convert`` and ``identify``.
+THUMBNAIL_CONVERT_TIMEOUT = None
+THUMBNAIL_IDENTIFY_TIMEOUT = None
+
 # Path to ``vipsthumbnail`` and ``vipsheader``
 THUMBNAIL_VIPSTHUMBNAIL = 'vipsthumbnail'
 THUMBNAIL_VIPSHEADER = 'vipsheader'
